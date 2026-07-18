@@ -20,12 +20,12 @@ jobs:
           java-version: '21'
 
       # ให้สิทธิ์ระบบคลาวด์ในการรันสคริปต์ของโปรเจกต์
-      - name: Grant execute permission for gradle
-        run: chmod +x gradle
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
       # เปลี่ยนมาใช้ ./gradlew ตรงๆ เพื่อให้ดึงไฟล์ .jar และ Properties ที่เพิ่งอัปโหลดไปใช้งาน
       - name: Build Debug APK
-        run: ./gradle assembleDebug
+        run: ./gradlew assembleDebug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
