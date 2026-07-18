@@ -7,12 +7,13 @@ import java.io.IOException;
 
 public class MusicPlayerManager {
     private static final String TAG = "MusicPlayerManager";
-    private static final String STREAM_URL = "http://icecast.thaiirc.com:8000/ices";
+    public static final String DEFAULT_STREAM_URL = "http://icecast.thaiirc.com:8000/ices";
 
     private static MusicPlayerManager sInstance;
     private MediaPlayer mMediaPlayer;
     private boolean mIsPlaying = false;
     private boolean mIsPreparing = false;
+    private String mCurrentUrl = null;
     private PlayStateListener mListener;
 
     public interface PlayStateListener {
@@ -44,17 +45,36 @@ public class MusicPlayerManager {
         return mIsPreparing;
     }
 
+    public String getCurrentUrl() {
+        return mCurrentUrl;
+    }
+
     public void togglePlay() {
-        if (mIsPlaying || mIsPreparing) {
+        togglePlay(DEFAULT_STREAM_URL);
+    }
+
+    public void togglePlay(String url) {
+        if ((mIsPlaying || mIsPreparing) && url.equals(mCurrentUrl)) {
             stop();
         } else {
-            start();
+            if (mIsPlaying || mIsPreparing) {
+                stop();
+            }
+            start(url);
         }
     }
 
     public void start() {
-        if (mIsPlaying || mIsPreparing) return;
+        start(DEFAULT_STREAM_URL);
+    }
+
+    public void start(String url) {
+        if ((mIsPlaying || mIsPreparing) && url.equals(mCurrentUrl)) return;
+        if (mIsPlaying || mIsPreparing) {
+            stop();
+        }
         mIsPreparing = true;
+        mCurrentUrl = url;
         if (mListener != null) {
             mListener.onPlayStateChanged(false, true);
         }
@@ -71,7 +91,7 @@ public class MusicPlayerManager {
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .build()
             );
-            mMediaPlayer.setDataSource(STREAM_URL);
+            mMediaPlayer.setDataSource(url);
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
@@ -115,6 +135,7 @@ public class MusicPlayerManager {
     public void stop() {
         mIsPlaying = false;
         mIsPreparing = false;
+        mCurrentUrl = null;
         if (mMediaPlayer != null) {
             try {
                 mMediaPlayer.stop();

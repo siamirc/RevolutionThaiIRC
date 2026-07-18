@@ -14,6 +14,7 @@ import java.util.List;
 
 import io.mrarm.irc.MainActivity;
 import io.mrarm.irc.MusicQuestActivity;
+import io.mrarm.irc.LiveRadioActivity;
 import io.mrarm.irc.NotificationManager;
 import io.mrarm.irc.R;
 import io.mrarm.irc.ServerConnectionInfo;
@@ -39,6 +40,7 @@ public class DrawerHelper implements ServerConnectionManager.ConnectionsListener
     private DrawerMenuItem mManageServersItem;
     private DrawerMenuItem mSettingsItem;
     private DrawerMenuItem mMusicQuestItem;
+    private DrawerMenuItem mLiveRadioItem;
     private boolean mHasRegisteredListeners = false;
 
     public DrawerHelper(Activity activity) {
@@ -74,6 +76,12 @@ public class DrawerHelper implements ServerConnectionManager.ConnectionsListener
             activity.startActivity(new Intent(activity, MusicQuestActivity.class));
         });
         mAdapter.addMenuItem(mMusicQuestItem);
+
+        mLiveRadioItem = new DrawerMenuItem("Live Radio", R.drawable.ic_music_note);
+        mLiveRadioItem.setOnClickListener((View view) -> {
+            activity.startActivity(new Intent(activity, LiveRadioActivity.class));
+        });
+        mAdapter.addMenuItem(mLiveRadioItem);
 
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             boolean wasClosed = false;

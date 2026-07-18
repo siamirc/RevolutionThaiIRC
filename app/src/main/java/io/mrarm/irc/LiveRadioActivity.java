@@ -20,7 +20,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class MusicQuestActivity extends ThemedActivity implements MusicPlayerManager.PlayStateListener {
+public class LiveRadioActivity extends ThemedActivity implements MusicPlayerManager.PlayStateListener {
+
+    private static final String STREAM_URL = "http://radio.thaiirc.com:8002/ices";
+    private static final String METADATA_URL = "http://radio.thaiirc.com:8002/status-json.xsl";
 
     private TextView mNowPlayingText;
     private Button mPlayToggleButton;
@@ -46,13 +49,13 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_music_quest);
+        setContentView(R.layout.activity_live_radio);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Music Quest");
+            getSupportActionBar().setTitle("Live Radio");
         }
 
         mNowPlayingText = findViewById(R.id.now_playing_text);
@@ -70,7 +73,7 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
         mPlayToggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MusicPlayerManager.getInstance().togglePlay();
+                MusicPlayerManager.getInstance().togglePlay(STREAM_URL);
             }
         });
 
@@ -78,7 +81,7 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
             @Override
             public void onClick(View v) {
                 fetchMetadata();
-                Toast.makeText(MusicQuestActivity.this, "Refreshing info...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LiveRadioActivity.this, "Refreshing info...", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -114,7 +117,7 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
             public void run() {
                 HttpURLConnection conn = null;
                 try {
-                    URL url = new URL("http://icecast.thaiirc.com:8000/status-json.xsl");
+                    URL url = new URL(METADATA_URL);
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setConnectTimeout(5000);
                     conn.setReadTimeout(5000);
@@ -134,7 +137,7 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
                         showFallbackMetadata();
                     }
                 } catch (Exception e) {
-                    Log.e("MusicQuestActivity", "Error fetching metadata", e);
+                    Log.e("LiveRadioActivity", "Error fetching metadata", e);
                     showFallbackMetadata();
                 } finally {
                     if (conn != null) {
@@ -170,15 +173,15 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
                     }
 
                     if (targetSource != null) {
-                        final String serverName = targetSource.optString("server_name", "Musichitz Looktung");
-                        final String serverDesc = targetSource.optString("server_description", "ฮิตทั่วฟ้า แฟนเพลงขวัญใจมหาชน");
+                        final String serverName = targetSource.optString("server_name", "Musichitz Station Online");
+                        final String serverDesc = targetSource.optString("server_description", "Music All Day Music All Night");
                         final String contentType = targetSource.optString("server_type", "audio/mpeg");
-                        final String streamStarted = targetSource.optString("stream_start", "Fri, 17 Jul 2026 14:38:26 +0700");
+                        final String streamStarted = targetSource.optString("stream_start", "Sat, 18 Jul 2026 00:10:12 +0700");
                         final int bitrate = targetSource.optInt("bitrate", 128);
                         final int listeners = targetSource.optInt("listeners", 1);
-                        final int peakListeners = targetSource.optInt("listener_peak", 4);
-                        final String genre = targetSource.optString("genre", "Country");
-                        final String title = targetSource.optString("title", "ส.ธ. - นุช วิลาวัลย์");
+                        final int peakListeners = targetSource.optInt("listener_peak", 7);
+                        final String genre = targetSource.optString("genre", "Pop");
+                        final String title = targetSource.optString("title", "Violette Wautier - BACK TO REALITY");
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -187,7 +190,7 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
                                 mStreamDescriptionText.setText(serverDesc);
                                 mStreamContentTypeText.setText(contentType);
                                 mStreamStartedText.setText(streamStarted);
-                                mStreamBitrateText.setText(bitrate + " kbps");
+                                mStreamBitrateText.setText(String.valueOf(bitrate));
                                 mStreamListenersText.setText(listeners + " (Peak: " + peakListeners + ")");
                                 mStreamGenreText.setText(genre);
                                 mNowPlayingText.setText(title);
@@ -198,7 +201,7 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
                 }
             }
         } catch (Exception e) {
-            Log.e("MusicQuestActivity", "JSON parsing error", e);
+            Log.e("LiveRadioActivity", "JSON parsing error", e);
         }
         showFallbackMetadata();
     }
@@ -207,14 +210,14 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mStreamNameText.setText("Musichitz Looktung");
-                mStreamDescriptionText.setText("ฮิตทั่วบ้าน ฮอตทุกหลังคาเรือน");
+                mStreamNameText.setText("Musichitz Station Online");
+                mStreamDescriptionText.setText("Music All Day Music All Night");
                 mStreamContentTypeText.setText("audio/mpeg");
-                mStreamStartedText.setText("Fri, 17 Jul 2026 14:38:26 +0700");
-                mStreamBitrateText.setText("128 kbps");
-                mStreamListenersText.setText("1 (Peak: 4)");
-                mStreamGenreText.setText("Country");
-                mNowPlayingText.setText("ส.ธ. - นุช วิลาวัลย์");
+                mStreamStartedText.setText("Sat, 18 Jul 2026 00:10:12 +0700");
+                mStreamBitrateText.setText("128");
+                mStreamListenersText.setText("1 (Peak: 7)");
+                mStreamGenreText.setText("Pop");
+                mNowPlayingText.setText("Violette Wautier - BACK TO REALITY");
             }
         });
     }
@@ -224,8 +227,8 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                boolean isThisStreamPlaying = isPlaying && MusicPlayerManager.DEFAULT_STREAM_URL.equals(MusicPlayerManager.getInstance().getCurrentUrl());
-                boolean isThisStreamPreparing = isPreparing && MusicPlayerManager.DEFAULT_STREAM_URL.equals(MusicPlayerManager.getInstance().getCurrentUrl());
+                boolean isThisStreamPlaying = isPlaying && STREAM_URL.equals(MusicPlayerManager.getInstance().getCurrentUrl());
+                boolean isThisStreamPreparing = isPreparing && STREAM_URL.equals(MusicPlayerManager.getInstance().getCurrentUrl());
                 if (isThisStreamPreparing) {
                     mPlayToggleButton.setText("BUFFERING...");
                     mPlayToggleButton.setEnabled(false);
@@ -248,7 +251,7 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(MusicQuestActivity.this, message, Toast.LENGTH_LONG).show();
+                Toast.makeText(LiveRadioActivity.this, message, Toast.LENGTH_LONG).show();
             }
         });
     }
