@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Revolution IRC</string>
 
+    <string name="action_radio">Radio</string>
+    <string name="radio_off">Radio Off</string>
+    <string name="radio_play">PLAY</string>
+
     <!-- Chat -->
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

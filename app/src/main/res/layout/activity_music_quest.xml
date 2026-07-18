@@ -23,279 +23,294 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/appbar"
-        android:fillViewport="true">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabMenu"
+            android:background="@color/colorPrimary"
+            android:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="@dimen/dialog_bottom_user_header_min_height" />
 
-            <!-- Player Status Card -->
-            <androidx.cardview.widget.CardView
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/rlRadio"
+                android:visibility="visible"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="?attr/colorButtonNormal">
+                android:layout_height="match_parent">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tvMimeType"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center_horizontal">
+                    android:text="MT"
+                    android:layout_below="@+id/textView25"
+                    android:layout_marginStart="25dp"
+                    android:layout_alignParentStart="true" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Currently Playing"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorAccent"
-                        android:textAllCaps="true"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:id="@+id/now_playing_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Loading song title..."
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?android:attr/textColorPrimary"
-                        android:gravity="center"
-                        android:layout_marginBottom="16dp" />
-
-                    <!-- Play/Pause Button -->
-                    <Button
-                        android:id="@+id/play_toggle_button"
-                        android:layout_width="200dp"
-                        android:layout_height="56dp"
-                        android:text="TURN ON"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="12dp"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:id="@+id/player_status_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Status: Stopped"
-                        android:textSize="14sp"
-                        android:textColor="?android:attr/textColorSecondary" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- Stream Information Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="?attr/colorButtonNormal">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:textColor="@color/colorAccent"
+                    android:id="@+id/textView27"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_marginTop="66dp"
+                    android:text="RJ Name"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="25dp"
+                    android:layout_alignParentStart="true" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Stream Information"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorAccent"
-                        android:textAllCaps="true"
-                        android:layout_marginBottom="12dp" />
+                <TextView
+                    android:textColor="@color/colorAccent"
+                    android:id="@+id/textView25"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MIME Type"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="25dp"
+                    android:layout_alignParentStart="true" />
 
-                    <!-- Stream Name -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingVertical="4dp">
-                        <TextView
-                            android:layout_width="140dp"
-                            android:layout_height="wrap_content"
-                            android:text="Stream Name:"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorPrimary" />
-                        <TextView
-                            android:id="@+id/stream_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Musichitz Looktung"
-                            android:textColor="?android:attr/textColorPrimary" />
-                    </LinearLayout>
+                <TextView
+                    android:textColor="@color/colorAccent"
+                    android:id="@+id/textView23"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SampleRate"
+                    android:layout_below="@+id/tvBitRate"
+                    android:layout_alignStart="@+id/textView27" />
 
-                    <!-- Stream Description -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingVertical="4dp">
-                        <TextView
-                            android:layout_width="140dp"
-                            android:layout_height="wrap_content"
-                            android:text="Description:"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorPrimary" />
-                        <TextView
-                            android:id="@+id/stream_description"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="ฮิตทั่วฟ้า แฟนเพลงขวัญใจมหาชน"
-                            android:textColor="?android:attr/textColorPrimary" />
-                    </LinearLayout>
+                <TextView
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:id="@+id/textView26"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="29dp"
+                    android:text="DETAILS"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="25dp"
+                    android:layout_alignStart="@+id/textView27" />
 
-                    <!-- Content Type -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingVertical="4dp">
-                        <TextView
-                            android:layout_width="140dp"
-                            android:layout_height="wrap_content"
-                            android:text="Content Type:"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorPrimary" />
-                        <TextView
-                            android:id="@+id/stream_content_type"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="audio/mpeg"
-                            android:textColor="?android:attr/textColorPrimary" />
-                    </LinearLayout>
+                <TextView
+                    android:id="@+id/tvBitRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BR"
+                    android:layout_below="@+id/textView16"
+                    android:layout_alignStart="@+id/textView27" />
 
-                    <!-- Stream Started -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingVertical="4dp">
-                        <TextView
-                            android:layout_width="140dp"
-                            android:layout_height="wrap_content"
-                            android:text="Stream Started:"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorPrimary" />
-                        <TextView
-                            android:id="@+id/stream_started"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Fri, 17 Jul 2026 14:38:26 +0700"
-                            android:textColor="?android:attr/textColorPrimary" />
-                    </LinearLayout>
+                <TextView
+                    android:textColor="@color/colorAccent"
+                    android:id="@+id/textView18"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="157dp"
+                    android:text="Genre/Show"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="25dp"
+                    android:layout_alignParentStart="true" />
 
-                    <!-- Bitrate -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingVertical="4dp">
-                        <TextView
-                            android:layout_width="140dp"
-                            android:layout_height="wrap_content"
-                            android:text="Bitrate:"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorPrimary" />
-                        <TextView
-                            android:id="@+id/stream_bitrate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="128 kbps"
-                            android:textColor="?android:attr/textColorPrimary" />
-                    </LinearLayout>
+                <TextView
+                    android:textColor="@color/colorAccent"
+                    android:id="@+id/textView24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Channel"
+                    android:layout_below="@+id/tvSampleRate"
+                    android:layout_alignStart="@+id/textView27" />
 
-                    <!-- Listeners -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingVertical="4dp">
-                        <TextView
-                            android:layout_width="140dp"
-                            android:layout_height="wrap_content"
-                            android:text="Listeners:"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorPrimary" />
-                        <TextView
-                            android:id="@+id/stream_listeners"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="1 (Peak: 4)"
-                            android:textColor="?android:attr/textColorPrimary" />
-                    </LinearLayout>
+                <TextView
+                    android:id="@+id/tvChannel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CH"
+                    android:layout_below="@+id/textView24"
+                    android:layout_alignStart="@+id/textView27" />
 
-                    <!-- Genre -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingVertical="4dp">
-                        <TextView
-                            android:layout_width="140dp"
-                            android:layout_height="wrap_content"
-                            android:text="Genre:"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorPrimary" />
-                        <TextView
-                            android:id="@+id/stream_genre"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Country"
-                            android:textColor="?android:attr/textColorPrimary" />
-                    </LinearLayout>
+                <TextView
+                    android:textColor="@color/colorAccent"
+                    android:id="@+id/textView22"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="111dp"
+                    android:text="Now Playing"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="25dp"
+                    android:layout_alignParentStart="true" />
 
-                    <!-- Stream Web URL -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingVertical="4dp">
-                        <TextView
-                            android:layout_width="140dp"
-                            android:layout_height="wrap_content"
-                            android:text="Stream URL:"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorPrimary" />
-                        <TextView
-                            android:id="@+id/stream_url"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="https://musichitz.net/looktung.html"
-                            android:textColor="?attr/colorAccent" />
-                    </LinearLayout>
+                <TextView
+                    android:id="@+id/tvGenre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GN"
+                    android:layout_below="@+id/textView18"
+                    android:layout_marginStart="25dp"
+                    android:layout_alignParentStart="true" />
 
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/rjName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RN"
+                    android:layout_below="@+id/textView27"
+                    android:layout_marginStart="25dp"
+                    android:layout_alignParentStart="true" />
 
-            </androidx.cardview.widget.CardView>
+                <TextView
+                    android:textColor="@color/colorAccent"
+                    android:id="@+id/textView16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bit Rate"
+                    android:layout_below="@+id/tvMimeType"
+                    android:layout_alignStart="@+id/textView27" />
 
-            <!-- Refresh Button -->
-            <Button
-                android:id="@+id/refresh_info_button"
-                style="?android:attr/borderlessButtonStyle"
+                <TextView
+                    android:id="@+id/tvSampleRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SR"
+                    android:layout_below="@+id/textView23"
+                    android:layout_alignStart="@+id/textView27" />
+
+                <TextView
+                    android:ellipsize="marquee"
+                    android:id="@+id/tvNowPlay"
+                    android:fadingEdge="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NP"
+                    android:singleLine="true"
+                    android:layout_below="@+id/textView22"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:layout_marginStart="25dp"
+                    android:layout_alignParentStart="true" />
+            </RelativeLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBar3"
+                android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Refresh Info"
-                android:textColor="?attr/colorAccent" />
+                android:layout_centerInParent="true"
+                style="?android:progressBarStyle" />
 
-        </LinearLayout>
+            <ListView
+                android:id="@+id/listview"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="0dp" />
 
-    </ScrollView>
+            <ImageView
+                android:id="@+id/imageRadio"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:layout_alignParentTop="true"
+                android:contentDescription="@string/action_radio"
+                android:alpha="0.2"
+                android:layout_alignParentStart="true"
+                app:srcCompat="@drawable/ic_radio" />
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="50dp" />
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewPager"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
+
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:id="@+id/sub_player"
+                android:background="@android:color/black"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true">
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="135dp"
+                    android:layout_alignParentEnd="true"
+                    style="?android:progressBarStyle" />
+
+                <TextView
+                    android:textSize="18sp"
+                    android:textColor="@android:color/white"
+                    android:gravity="start|center"
+                    android:id="@+id/name"
+                    android:visibility="visible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/radio_off" />
+
+                <TextView
+                    android:textColor="@android:color/white"
+                    android:ellipsize="marquee"
+                    android:id="@+id/NowPlaying"
+                    android:visibility="visible"
+                    android:fadingEdge="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="32dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:layout_alignParentRight="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="120dp" />
+
+                <Button
+                    android:textColor="@android:color/white"
+                    android:id="@+id/playTrig"
+                    android:background="@drawable/roundedbutton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:text="@string/radio_play"
+                    android:layout_alignParentTop="true"
+                    android:drawableStart="@drawable/ic_play_white"
+                    android:layout_marginEnd="21dp"
+                    android:layout_alignParentEnd="true" />
+
+                <TextView
+                    android:textColor="@android:color/white"
+                    android:ellipsize="marquee"
+                    android:id="@+id/djName"
+                    android:visibility="gone"
+                    android:fadingEdge="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:layout_alignParentTop="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:layout_marginStart="111dp"
+                    android:layout_alignParentStart="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
 </io.mrarm.irc.view.OpaqueStatusBarRelativeLayout>

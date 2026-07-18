@@ -26,6 +26,7 @@ public class LiveRadioActivity extends ThemedActivity implements MusicPlayerMana
     private static final String METADATA_URL = "http://radio.thaiirc.com:8002/status-json.xsl";
 
     private TextView mNowPlayingText;
+    private TextView mBottomNowPlayingText;
     private Button mPlayToggleButton;
     private TextView mPlayerStatusText;
 
@@ -58,32 +59,41 @@ public class LiveRadioActivity extends ThemedActivity implements MusicPlayerMana
             getSupportActionBar().setTitle("Live Radio");
         }
 
-        mNowPlayingText = findViewById(R.id.now_playing_text);
-        mPlayToggleButton = findViewById(R.id.play_toggle_button);
-        mPlayerStatusText = findViewById(R.id.player_status_text);
+        mNowPlayingText = findViewById(R.id.tvNowPlay);
+        mBottomNowPlayingText = findViewById(R.id.NowPlaying);
+        mPlayToggleButton = findViewById(R.id.playTrig);
+        mPlayerStatusText = findViewById(R.id.name);
 
-        mStreamNameText = findViewById(R.id.stream_name);
-        mStreamDescriptionText = findViewById(R.id.stream_description);
-        mStreamContentTypeText = findViewById(R.id.stream_content_type);
-        mStreamStartedText = findViewById(R.id.stream_started);
-        mStreamBitrateText = findViewById(R.id.stream_bitrate);
-        mStreamListenersText = findViewById(R.id.stream_listeners);
-        mStreamGenreText = findViewById(R.id.stream_genre);
+        mStreamNameText = findViewById(R.id.tvChannel);
+        mStreamDescriptionText = findViewById(R.id.rjName);
+        mStreamContentTypeText = findViewById(R.id.tvMimeType);
+        mStreamStartedText = findViewById(R.id.tvSampleRate);
+        mStreamBitrateText = findViewById(R.id.tvBitRate);
+        mStreamListenersText = null;
+        mStreamGenreText = findViewById(R.id.tvGenre);
 
-        mPlayToggleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MusicPlayerManager.getInstance().togglePlay(STREAM_URL);
+        if (mPlayToggleButton != null) {
+            mPlayToggleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MusicPlayerManager.getInstance().togglePlay(STREAM_URL);
+                }
+            });
+        }
+
+        int refreshBtnId = getResources().getIdentifier("refresh_info_button", "id", getPackageName());
+        if (refreshBtnId != 0) {
+            View refreshBtn = findViewById(refreshBtnId);
+            if (refreshBtn != null) {
+                refreshBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fetchMetadata();
+                        Toast.makeText(LiveRadioActivity.this, "Refreshing info...", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        });
-
-        findViewById(R.id.refresh_info_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fetchMetadata();
-                Toast.makeText(LiveRadioActivity.this, "Refreshing info...", Toast.LENGTH_SHORT).show();
-            }
-        });
+        }
 
         showFallbackMetadata();
     }
@@ -186,14 +196,15 @@ public class LiveRadioActivity extends ThemedActivity implements MusicPlayerMana
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mStreamNameText.setText(serverName);
-                                mStreamDescriptionText.setText(serverDesc);
-                                mStreamContentTypeText.setText(contentType);
-                                mStreamStartedText.setText(streamStarted);
-                                mStreamBitrateText.setText(String.valueOf(bitrate));
-                                mStreamListenersText.setText(listeners + " (Peak: " + peakListeners + ")");
-                                mStreamGenreText.setText(genre);
-                                mNowPlayingText.setText(title);
+                                if (mStreamNameText != null) mStreamNameText.setText(serverName);
+                                if (mStreamDescriptionText != null) mStreamDescriptionText.setText(serverDesc);
+                                if (mStreamContentTypeText != null) mStreamContentTypeText.setText(contentType);
+                                if (mStreamStartedText != null) mStreamStartedText.setText(streamStarted);
+                                if (mStreamBitrateText != null) mStreamBitrateText.setText(String.valueOf(bitrate) + " kbps");
+                                if (mStreamListenersText != null) mStreamListenersText.setText(listeners + " (Peak: " + peakListeners + ")");
+                                if (mStreamGenreText != null) mStreamGenreText.setText(genre);
+                                if (mNowPlayingText != null) mNowPlayingText.setText(title);
+                                if (mBottomNowPlayingText != null) mBottomNowPlayingText.setText(title);
                             }
                         });
                         return;
@@ -210,14 +221,15 @@ public class LiveRadioActivity extends ThemedActivity implements MusicPlayerMana
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mStreamNameText.setText("Musichitz Station Online");
-                mStreamDescriptionText.setText("Music All Day Music All Night");
-                mStreamContentTypeText.setText("audio/mpeg");
-                mStreamStartedText.setText("Sat, 18 Jul 2026 00:10:12 +0700");
-                mStreamBitrateText.setText("128");
-                mStreamListenersText.setText("1 (Peak: 7)");
-                mStreamGenreText.setText("Pop");
-                mNowPlayingText.setText("Violette Wautier - BACK TO REALITY");
+                if (mStreamNameText != null) mStreamNameText.setText("Musichitz Station Online");
+                if (mStreamDescriptionText != null) mStreamDescriptionText.setText("Music All Day Music All Night");
+                if (mStreamContentTypeText != null) mStreamContentTypeText.setText("audio/mpeg");
+                if (mStreamStartedText != null) mStreamStartedText.setText("Sat, 18 Jul 2026 00:10:12 +0700");
+                if (mStreamBitrateText != null) mStreamBitrateText.setText("128 kbps");
+                if (mStreamListenersText != null) mStreamListenersText.setText("1 (Peak: 7)");
+                if (mStreamGenreText != null) mStreamGenreText.setText("Pop");
+                if (mNowPlayingText != null) mNowPlayingText.setText("Violette Wautier - BACK TO REALITY");
+                if (mBottomNowPlayingText != null) mBottomNowPlayingText.setText("Violette Wautier - BACK TO REALITY");
             }
         });
     }
@@ -229,18 +241,26 @@ public class LiveRadioActivity extends ThemedActivity implements MusicPlayerMana
             public void run() {
                 boolean isThisStreamPlaying = isPlaying && STREAM_URL.equals(MusicPlayerManager.getInstance().getCurrentUrl());
                 boolean isThisStreamPreparing = isPreparing && STREAM_URL.equals(MusicPlayerManager.getInstance().getCurrentUrl());
-                if (isThisStreamPreparing) {
-                    mPlayToggleButton.setText("BUFFERING...");
-                    mPlayToggleButton.setEnabled(false);
-                    mPlayerStatusText.setText("Status: Buffering stream...");
-                } else if (isThisStreamPlaying) {
-                    mPlayToggleButton.setText("TURN OFF");
-                    mPlayToggleButton.setEnabled(true);
-                    mPlayerStatusText.setText("Status: Playing");
-                } else {
-                    mPlayToggleButton.setText("TURN ON");
-                    mPlayToggleButton.setEnabled(true);
-                    mPlayerStatusText.setText("Status: Stopped");
+                if (mPlayToggleButton != null) {
+                    if (isThisStreamPreparing) {
+                        mPlayToggleButton.setText("BUFFERING...");
+                        mPlayToggleButton.setEnabled(false);
+                    } else if (isThisStreamPlaying) {
+                        mPlayToggleButton.setText("STOP");
+                        mPlayToggleButton.setEnabled(true);
+                    } else {
+                        mPlayToggleButton.setText("PLAY");
+                        mPlayToggleButton.setEnabled(true);
+                    }
+                }
+                if (mPlayerStatusText != null) {
+                    if (isThisStreamPreparing) {
+                        mPlayerStatusText.setText("Buffering...");
+                    } else if (isThisStreamPlaying) {
+                        mPlayerStatusText.setText("Playing");
+                    } else {
+                        mPlayerStatusText.setText("Radio Off");
+                    }
                 }
             }
         });
