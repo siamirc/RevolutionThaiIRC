@@ -13,6 +13,7 @@ import android.view.View;
 import java.util.List;
 
 import io.mrarm.irc.MainActivity;
+import io.mrarm.irc.MusicQuestActivity;
 import io.mrarm.irc.NotificationManager;
 import io.mrarm.irc.R;
 import io.mrarm.irc.ServerConnectionInfo;
@@ -37,6 +38,7 @@ public class DrawerHelper implements ServerConnectionManager.ConnectionsListener
     private DrawerMenuItem mSearchItem;
     private DrawerMenuItem mManageServersItem;
     private DrawerMenuItem mSettingsItem;
+    private DrawerMenuItem mMusicQuestItem;
     private boolean mHasRegisteredListeners = false;
 
     public DrawerHelper(Activity activity) {
@@ -66,6 +68,12 @@ public class DrawerHelper implements ServerConnectionManager.ConnectionsListener
             activity.startActivity(new Intent(activity, SettingsActivity.class));
         });
         mAdapter.addMenuItem(mSettingsItem);
+
+        mMusicQuestItem = new DrawerMenuItem("Music Quest", R.drawable.ic_music_note);
+        mMusicQuestItem.setOnClickListener((View view) -> {
+            activity.startActivity(new Intent(activity, MusicQuestActivity.class));
+        });
+        mAdapter.addMenuItem(mMusicQuestItem);
 
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             boolean wasClosed = false;

@@ -96,6 +96,10 @@
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".MusicQuestActivity"
+            android:label="Music Quest"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".MessageFormatSettingsActivity"
             android:label="@string/title_activity_message_format_settings" />
         <activity
