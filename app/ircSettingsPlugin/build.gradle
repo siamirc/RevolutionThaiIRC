@@ -1,14 +1,11 @@
 apply plugin: 'java-gradle-plugin'
 apply plugin: 'groovy'
-
 group = 'io.mrarm.irc'
 version = '1.0'
-
 repositories {
     mavenCentral()
     google()
 }
-
 gradlePlugin {
     plugins {
         settingsPlugin {
@@ -17,9 +14,8 @@ gradlePlugin {
         }
     }
 }
-
 dependencies {
-    implementation 'com.android.tools.build:gradle:9.1.1'
+    implementation 'com.android.tools.build:gradle:8.9.1'
     implementation 'org.yaml:snakeyaml:1.23'
     implementation 'com.squareup:javawriter:2.5.1'
 }
