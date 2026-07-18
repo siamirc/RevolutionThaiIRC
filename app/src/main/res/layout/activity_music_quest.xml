@@ -238,7 +238,7 @@
                 android:id="@+id/sub_player"
                 android:background="@android:color/black"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="85dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true">
 
@@ -262,7 +262,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="12dp"
                     android:text="@string/radio_off" />
 
                 <TextView
@@ -274,7 +274,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="42dp"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:layout_alignParentRight="true"
@@ -288,7 +288,7 @@
                     android:background="@drawable/roundedbutton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
+                    android:layout_marginTop="16dp"
                     android:text="@string/radio_play"
                     android:layout_alignParentTop="true"
                     android:drawableStart="@drawable/ic_play_white"

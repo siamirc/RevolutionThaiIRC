@@ -57,7 +57,13 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
         }
 
         mNowPlayingText = findViewById(R.id.tvNowPlay);
+        if (mNowPlayingText != null) {
+            mNowPlayingText.setSelected(true);
+        }
         mBottomNowPlayingText = findViewById(R.id.NowPlaying);
+        if (mBottomNowPlayingText != null) {
+            mBottomNowPlayingText.setSelected(true);
+        }
         mPlayToggleButton = findViewById(R.id.playTrig);
         mPlayerStatusText = findViewById(R.id.name);
 
@@ -124,7 +130,7 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
             public void run() {
                 HttpURLConnection conn = null;
                 try {
-                    URL url = new URL("http://icecast.thaiirc.com:8000/status-json.xsl");
+                    URL url = new URL("http://icecast.thaiirc.com:8000/status.xsl");
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setConnectTimeout(5000);
                     conn.setReadTimeout(5000);
@@ -155,63 +161,106 @@ public class MusicQuestActivity extends ThemedActivity implements MusicPlayerMan
         }).start();
     }
 
-    private void parseAndShowMetadata(String jsonString) {
+    private void parseAndShowMetadata(String html) {
         try {
-            JSONObject obj = new JSONObject(jsonString);
-            if (obj.has("icestats")) {
-                JSONObject icestats = obj.getJSONObject("icestats");
-                if (icestats.has("source")) {
-                    Object sourceObj = icestats.get("source");
-                    JSONObject targetSource = null;
-                    if (sourceObj instanceof JSONArray) {
-                        JSONArray sources = (JSONArray) sourceObj;
-                        for (int i = 0; i < sources.length(); i++) {
-                            JSONObject src = sources.getJSONObject(i);
-                            if (src.has("mount") && src.getString("mount").equals("/ices")) {
-                                targetSource = src;
-                                break;
-                            }
-                        }
-                    } else if (sourceObj instanceof JSONObject) {
-                        JSONObject src = (JSONObject) sourceObj;
-                        if (src.has("mount") && src.getString("mount").equals("/ices")) {
-                            targetSource = src;
-                        }
-                    }
-
-                    if (targetSource != null) {
-                        final String serverName = targetSource.optString("server_name", "Musichitz Looktung");
-                        final String serverDesc = targetSource.optString("server_description", "ฮิตทั่วฟ้า แฟนเพลงขวัญใจมหาชน");
-                        final String contentType = targetSource.optString("server_type", "audio/mpeg");
-                        final String streamStarted = targetSource.optString("stream_start", "Fri, 17 Jul 2026 14:38:26 +0700");
-                        final int bitrate = targetSource.optInt("bitrate", 128);
-                        final int listeners = targetSource.optInt("listeners", 1);
-                        final int peakListeners = targetSource.optInt("listener_peak", 4);
-                        final String genre = targetSource.optString("genre", "Country");
-                        final String title = targetSource.optString("title", "ส.ธ. - นุช วิลาวัลย์");
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (mStreamNameText != null) mStreamNameText.setText(serverName);
-                                if (mStreamDescriptionText != null) mStreamDescriptionText.setText(serverDesc);
-                                if (mStreamContentTypeText != null) mStreamContentTypeText.setText(contentType);
-                                if (mStreamStartedText != null) mStreamStartedText.setText(streamStarted);
-                                if (mStreamBitrateText != null) mStreamBitrateText.setText(bitrate + " kbps");
-                                if (mStreamListenersText != null) mStreamListenersText.setText(listeners + " (Peak: " + peakListeners + ")");
-                                if (mStreamGenreText != null) mStreamGenreText.setText(genre);
-                                if (mNowPlayingText != null) mNowPlayingText.setText(title);
-                                if (mBottomNowPlayingText != null) mBottomNowPlayingText.setText(title);
-                            }
-                        });
-                        return;
-                    }
+            int mountIdx = html.indexOf("Mount Point /ices");
+            if (mountIdx == -1) {
+                mountIdx = html.indexOf("/ices");
+            }
+            String mountHtml = html;
+            if (mountIdx != -1) {
+                int nextMountIdx = html.indexOf("Mount Point", mountIdx + 10);
+                if (nextMountIdx == -1) {
+                    nextMountIdx = html.indexOf("<h3>Mount Point", mountIdx + 10);
+                }
+                if (nextMountIdx != -1) {
+                    mountHtml = html.substring(mountIdx, nextMountIdx);
+                } else {
+                    mountHtml = html.substring(mountIdx);
                 }
             }
+
+            final String serverName = getValueByLabels(mountHtml, "Stream Name:", "Name:", "server_name");
+            final String serverDesc = getValueByLabels(mountHtml, "Stream Description:", "Description:", "server_description");
+            final String contentType = getValueByLabels(mountHtml, "Content Type:", "server_type");
+            final String streamStarted = getValueByLabels(mountHtml, "Mount started:", "Stream Started:", "stream_start");
+            final String bitrate = getValueByLabels(mountHtml, "Bitrate:", "bitrate");
+            final String listeners = getValueByLabels(mountHtml, "Current Listeners:", "Listeners:", "listeners");
+            final String peakListeners = getValueByLabels(mountHtml, "Peak Listeners:", "listener_peak");
+            final String genre = getValueByLabels(mountHtml, "Stream Genre:", "Genre:", "genre");
+            final String title = getValueByLabels(mountHtml, "Current Song:", "Stream Title:", "title");
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mStreamNameText != null && serverName != null) mStreamNameText.setText(serverName);
+                    if (mStreamDescriptionText != null && serverDesc != null) mStreamDescriptionText.setText(serverDesc);
+                    if (mStreamContentTypeText != null && contentType != null) mStreamContentTypeText.setText(contentType);
+                    if (mStreamStartedText != null && streamStarted != null) mStreamStartedText.setText(streamStarted);
+                    if (mStreamBitrateText != null && bitrate != null) mStreamBitrateText.setText(bitrate + " kbps");
+                    if (mStreamListenersText != null) {
+                        if (listeners != null && peakListeners != null) {
+                            mStreamListenersText.setText(listeners + " (Peak: " + peakListeners + ")");
+                        } else if (listeners != null) {
+                            mStreamListenersText.setText(listeners);
+                        }
+                    }
+                    if (mStreamGenreText != null && genre != null) mStreamGenreText.setText(genre);
+                    if (mNowPlayingText != null && title != null) mNowPlayingText.setText(title);
+                    if (mBottomNowPlayingText != null && title != null) mBottomNowPlayingText.setText(title);
+                }
+            });
+            if (title != null && !title.isEmpty()) {
+                return;
+            }
         } catch (Exception e) {
-            Log.e("MusicQuestActivity", "JSON parsing error", e);
+            Log.e("MusicQuestActivity", "Error parsing HTML metadata", e);
         }
         showFallbackMetadata();
+    }
+
+    private static String getValueByLabels(String html, String... labels) {
+        for (String label : labels) {
+            String val = getValueByLabel(html, label);
+            if (val != null && !val.isEmpty()) {
+                return val;
+            }
+        }
+        return null;
+    }
+
+    private static String getValueByLabel(String html, String label) {
+        int labelIdx = html.indexOf(label);
+        if (labelIdx == -1) {
+            return null;
+        }
+        int valueStartTagIdx = html.indexOf("<td", labelIdx + label.length());
+        if (valueStartTagIdx == -1) {
+            return null;
+        }
+        int valueContentStart = html.indexOf(">", valueStartTagIdx);
+        if (valueContentStart == -1) {
+            return null;
+        }
+        valueContentStart += 1;
+        int valueContentEnd = html.indexOf("</td>", valueContentStart);
+        if (valueContentEnd == -1) {
+            return null;
+        }
+        String val = html.substring(valueContentStart, valueContentEnd).trim();
+        val = val.replaceAll("<[^>]*>", "");
+        return decodeHtml(val);
+    }
+
+    private static String decodeHtml(String input) {
+        if (input == null) return null;
+        return input.replace("&amp;", "&")
+                    .replace("&lt;", "<")
+                    .replace("&gt;", ">")
+                    .replace("&quot;", "\"")
+                    .replace("&#39;", "'")
+                    .replace("&apos;", "'")
+                    .replace("&nbsp;", " ");
     }
 
     private void showFallbackMetadata() {
