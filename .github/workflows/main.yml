@@ -19,31 +19,13 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '9.3.1'
+      # ให้สิทธิ์ระบบคลาวด์ในการรันสคริปต์ของโปรเจกต์
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-      # สร้างสคริปต์ดักแก้ปัญหาตัวแปรดั้งเดิมที่โดน Gradle 9 ตัดทิ้ง เพื่อให้บิวด์ผ่านได้
-      - name: Create Gradle Fix Script
-        run: |
-          mkdir -p ~/.gradle
-          cat << 'EOF' > ~/.gradle/init.gradle
-          allprojects {
-              tasks.matching { it.name == 'generateSettings' }.configureEach {
-                  doFirst {
-                      if (!project.hasProperty('SettingsBuilder')) {
-                          // ทำการผูกคลาสเสมือนเพื่อให้โค้ดเก่าในแอปไม่แจ้ง Error ตัวแปรหาย
-                          project.ext.SettingsBuilder = org.gradle.api.DefaultTask
-                      }
-                  }
-              }
-          }
-          EOF
-
-      # ปล่อยให้รันงานทั้งหมด (รวมถึง generateSettings) โดยใช้ Gradle 9.3.1 ตามที่ระบบบังคับ
+      # เปลี่ยนมาใช้ ./gradlew ตรงๆ เพื่อให้ดึงไฟล์ .jar และ Properties ที่เพิ่งอัปโหลดไปใช้งาน
       - name: Build Debug APK
-        run: gradle assembleDebug -x lint --no-build-cache --no-configuration-cache
+        run: ./gradlew assembleDebug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
